@@ -16,6 +16,46 @@ cache_path = os.fsdecode(pathlib.Path(os.path.dirname(__file__)
 kbins = np.hstack([np.logspace(np.log(3.0e-4), np.log(.005), 4, base=np.e),
                    np.arange(.00501,.301,.0025),
                    np.logspace(np.log(.301), np.log(10.0), 25, base=np.e)])
+kbins = kbins[5:47]
+
+file_lists = [["full_c2_b2_f.npy", "full_c2_b1_b2.npy", "full_c2_b1_b1.npy",  
+               "full_c2_b1_f.npy", "full_c2_b1_f.npy", "full_c1_b1_b1_f.npy",
+               "full_c1_b2_f.npy", "full_c1_b1_b2.npy", "full_c1_b1_b1.npy",
+               "full_c2_b1_b1_f.npy", "full_c1_b1_f.npy"], 
+              ["full_c2_b1_f_f.npy", "full_c1_f_f.npy", "full_c1_f_f_f.npy",
+               "full_c2_f_f.npy", "full_c2_f_f_f.npy", "full_c1_f_f.npy",
+               "full_c1_b1_f_f.npy"], 
+              ["full_c1_c1_f_f.npy", "full_c2_c2_b1_f.npy", "full_c2_c1_b1_f.npy",  
+               "full_c2_c1_b1.npy", "full_c2_c1_b2.npy", "full_c2_c2_f_f.npy",
+               "full_c1_c1_f.npy", "full_c2_c2_b1.npy", "full_c2_c2_b2.npy",
+               "full_c2_c2_f.npy", "full_c2_c1_b1_f.npy", "full_c2_c1_f.npy",
+               "full_c1_c1_b1_f.npy", "full_c1_c1_b1.npy", "full_c1_c1_b2.npy",
+               "full_c1_c1_f_f.npy"], 
+              ["full_c1_c1_bG2.npy", "full_c2_c2_bG2.npy", "full_c2_c1_bG2.npy"], 
+              ["full_c1_b1_bG2.npy", "full_c1_bG2_f.npy", "full_c2_bG2_f.npy", 
+               "full_c2_b1_bG2.npy"], 
+              ["full_b1_f_f.npy", "full_b1_b1_f_f.npy", "full_b1_b1_b2.npy", 
+               "full_b2_f_f.npy", "full_b1_b1_b1.npy", "full_b1_b1_b1_f.npy",
+               "full_b1_b1_f.npy", "full_b1_f_f_f.npy", "full_f_f_f.npy",
+               "full_f_f_f_f.npy", "full_b1_b2_f.npy"], 
+              ["full_bG2_f_f.npy", "full_b1_b1_bG2.npy", "full_b1_bg2_f.npy"]]
+
+def group_info(group, file_list=False):
+    '''
+    Args:
+        group (int) : Group identifier.
+        file_list (bool) : If ``True`` returns list of file containing
+         the group kernels. Default is ``False``.
+
+    Returns:
+        Information about the kernel group.
+    '''
+    
+    if file_list:
+        return file_lists[group]
+    else:
+        return len(file_lists[group])
+
 
 class component_emulator:
     '''
@@ -25,18 +65,21 @@ class component_emulator:
     along with the scalers required to make predictions with the NN.
 
     Args:
-        kernel (str) : String to specify what component.
+        group (int) : Group identifier.
     '''
 
-    def __init__(self, kernel):
+    def __init__(self, group):
 
         self.kbins = kbins
         '''The k-bins at which predictions will be made.'''
 
         components_path = cache_path+"components/"
 
+        group_id = "group_{0}".format(group)
+        self.nKer = group_info(group)
+
         # Load the NN.
-        model = load_model(components_path+kernel+"/member_0", compile=False)
+        model = load_model(components_path+group_id+"/member_0", compile=False)
 
         self.model = model
 
@@ -47,7 +90,7 @@ class component_emulator:
 
         # Load the variables that define the scalers.
         xmin_diff = np.load(scalers_path+"xscaler_min_diff.npy")
-        ymin_diff = np.load(scalers_path+kernel+"/yscaler_min_diff.npy")
+        ymin_diff = np.load(scalers_path+group_id+"/yscaler_min_diff.npy")
 
         xscaler.min_val = xmin_diff[0, :]
         xscaler.diff = xmin_diff[1, :]
@@ -57,7 +100,7 @@ class component_emulator:
 
         self.scalers = (xscaler, yscaler)
 
-    def emu_predict(self, X):
+    def emu_predict(self, X, split=True):
         '''
         Make predictions with the component emulator.
 
@@ -65,6 +108,7 @@ class component_emulator:
             X (array) : Array containing the relevant input parameters. If making
              a single prediction should have shape (d,), if a batch prediction
              should have the shape (N,d).
+            split (bool) : If ``True`` prediction is split into individual kernels.
 
         Returns:
             Array containing the predictions from the component emulator.
@@ -79,4 +123,7 @@ class component_emulator:
         preds = self.scalers[1].inverse_transform(
             self.model(X_prime))
 
-        return preds
+        if split:
+            return np.split(preds, self.nKer, axis=1)
+        else:
+            return preds
