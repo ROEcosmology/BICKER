@@ -141,7 +141,7 @@ for i, group in enumerate(groups):
     print("Loading group: {0}".format(i))
     kernels = []
     for file in group:
-            kernels.append(np.load(inputY_path+file)[:,5:47])
+            kernels.append(np.load(inputY_path+file))
             print("Loaded {0}".format(file))
     print("Done. Loaded {0} kernels.".format(len(group)))
     kernels = np.hstack(kernels)

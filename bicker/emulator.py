@@ -13,10 +13,7 @@ import pathlib
 cache_path = os.fsdecode(pathlib.Path(os.path.dirname(__file__)
                                       ).parent.absolute())+"/bicker-cache/"
 
-kbins = np.hstack([np.logspace(np.log(3.0e-4), np.log(.005), 4, base=np.e),
-                   np.arange(.00501,.301,.0025),
-                   np.logspace(np.log(.301), np.log(10.0), 25, base=np.e)])
-kbins = kbins[5:47]
+kbins = np.arange(0.005,0.2025,.0025)
 
 file_lists = [["full_c2_b2_f.npy", "full_c2_b1_b2.npy", "full_c2_b1_b1.npy",  
                "full_c2_b1_f.npy", "full_c2_b1_f.npy", "full_c1_b1_b1_f.npy",
