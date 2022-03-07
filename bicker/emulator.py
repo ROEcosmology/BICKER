@@ -4,6 +4,7 @@ Flie contains Classes for the idividual component emulators.
 from tensorflow.keras.models import load_model
 import numpy as np
 from .training_funcs import UniformScaler, LogScaler
+from . import helper as helper_funcs
 from scipy.interpolate import interp1d
 import os
 import pathlib
@@ -14,45 +15,6 @@ cache_path = os.fsdecode(pathlib.Path(os.path.dirname(__file__)
                                       ).parent.absolute())+"/bicker-cache/"
 
 kbins = np.arange(0.005,0.2025,.0025)
-
-file_lists = [["full_c2_b2_f.npy", "full_c2_b1_b2.npy", "full_c2_b1_b1.npy",  
-               "full_c2_b1_f.npy", "full_c2_b1_f.npy", "full_c1_b1_b1_f.npy",
-               "full_c1_b2_f.npy", "full_c1_b1_b2.npy", "full_c1_b1_b1.npy",
-               "full_c2_b1_b1_f.npy", "full_c1_b1_f.npy"], 
-              ["full_c2_b1_f_f.npy", "full_c1_f_f.npy", "full_c1_f_f_f.npy",
-               "full_c2_f_f.npy", "full_c2_f_f_f.npy", "full_c1_f_f.npy",
-               "full_c1_b1_f_f.npy"], 
-              ["full_c1_c1_f_f.npy", "full_c2_c2_b1_f.npy", "full_c2_c1_b1_f.npy",  
-               "full_c2_c1_b1.npy", "full_c2_c1_b2.npy", "full_c2_c2_f_f.npy",
-               "full_c1_c1_f.npy", "full_c2_c2_b1.npy", "full_c2_c2_b2.npy",
-               "full_c2_c2_f.npy", "full_c2_c1_b1_f.npy", "full_c2_c1_f.npy",
-               "full_c1_c1_b1_f.npy", "full_c1_c1_b1.npy", "full_c1_c1_b2.npy",
-               "full_c1_c1_f_f.npy"], 
-              ["full_c1_c1_bG2.npy", "full_c2_c2_bG2.npy", "full_c2_c1_bG2.npy"], 
-              ["full_c1_b1_bG2.npy", "full_c1_bG2_f.npy", "full_c2_bG2_f.npy", 
-               "full_c2_b1_bG2.npy"], 
-              ["full_b1_f_f.npy", "full_b1_b1_f_f.npy", "full_b1_b1_b2.npy", 
-               "full_b2_f_f.npy", "full_b1_b1_b1.npy", "full_b1_b1_b1_f.npy",
-               "full_b1_b1_f.npy", "full_b1_f_f_f.npy", "full_f_f_f.npy",
-               "full_f_f_f_f.npy", "full_b1_b2_f.npy"], 
-              ["full_bG2_f_f.npy", "full_b1_b1_bG2.npy", "full_b1_bg2_f.npy"]]
-
-def group_info(group, file_list=False):
-    '''
-    Args:
-        group (int) : Group identifier.
-        file_list (bool) : If ``True`` returns list of file containing
-         the group kernels. Default is ``False``.
-
-    Returns:
-        Information about the kernel group.
-    '''
-    
-    if file_list:
-        return file_lists[group]
-    else:
-        return len(file_lists[group])
-
 
 class component_emulator:
     '''
@@ -73,7 +35,7 @@ class component_emulator:
         components_path = cache_path+"components/"
 
         group_id = "group_{0}".format(group)
-        self.nKer = group_info(group)
+        self.nKer = helper_funcs.group_info(group)
 
         # Load the NN.
         model = load_model(components_path+group_id+"/member_0", compile=False)
