@@ -8,7 +8,7 @@ with open("requirements.txt", 'r') as dependencies:
 
 setuptools.setup(
     name="bicker",
-    version="0.0.3",
+    version="0.0.4",
     author="Jamie Donald-McCann",
     author_email="jamie.donald-mccann@port.ac.uk",
     description="BIspeCtrum KERnel emulator",
