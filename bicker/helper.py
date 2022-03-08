@@ -38,7 +38,7 @@ def group_info(group, file_list=False):
     else:
         return len(bias_lists[group])
 
-def combine_kernels(kernel_groups, f, b1=None, b2=None, bG2=None, c1=None, c2=None,
+def combine_kernels(kernel_groups, b1=None, b2=None, bG2=None, c1=None, c2=None,
                     groups=None):
     '''
     Function for combing bias parameters and kernels.
@@ -49,6 +49,7 @@ def combine_kernels(kernel_groups, f, b1=None, b2=None, bG2=None, c1=None, c2=No
          With ``n_samp`` being the number of predictions to be made,
          ``n_ker`` being the number of kernels in that group,
          and ``n_k`` being the number of k-values.
+         Assumes growth rate f is inlcuded in the kernel.
         f (array) : Array containing growth rate.
          Should habe shape ``(n_samp)``.
         b1 (array) : Array containig b1 values.
@@ -70,8 +71,13 @@ def combine_kernels(kernel_groups, f, b1=None, b2=None, bG2=None, c1=None, c2=No
         Each list item will have shape ``(n_samp, n_k)``.
     '''
 
+    # Determine the number of predictions being made.
+    # This is a bit hacky.
+    # TODO: Find a nice way of determining the number of predictions.
+    npred = kernel_groups[0].shape[1]
+
     # Store passed bias parameters in dict.
-    bias_dict = {"b1":b1, "b2":b2, "bG2":bG2, "c1":c1, "c2":c2, "f":f}
+    bias_dict = {"b1":b1, "b2":b2, "bG2":bG2, "c1":c1, "c2":c2}
 
     # If passsed groups is None. Assume all.
     if groups is None:
@@ -88,10 +94,11 @@ def combine_kernels(kernel_groups, f, b1=None, b2=None, bG2=None, c1=None, c2=No
 
         for component_id, components in enumerate(bias_list):
     
-            bi = 1
+            bi = np.ones((npred, ))
             for bij in components:
-
-                bi *= bias_dict[bij]
+                if bij is not 'f':
+                    bi *= bias_dict[bij]
+                    
             result += bi.reshape(-1,1)*kernel_groups[list_id][component_id]
 
     return result

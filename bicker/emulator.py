@@ -98,14 +98,14 @@ class bispectrum:
         for g in range(7):
             self.components.append(component_emulator(g))
 
-    def emu_predict(self, cosmo, f, b1=None, b2=None, bG2=None, c1=None, c2=None):
+    def emu_predict(self, cosmo, b1=None, b2=None, bG2=None, c1=None, c2=None):
 
         # Make predictions for all kernels.
         kernel_group_preds = []
         for g in range(7):
-            kernel_group_preds.append(self.components[g].emu_predict(cosmo))
+            kernel_group_preds.append(np.stack(self.components[g].emu_predict(cosmo)))
 
-        return helper_funcs.combine_kernels(kernel_group_preds, f,
+        return helper_funcs.combine_kernels(kernel_group_preds,
                                             b1=b1, b2=b2, bG2=bG2,
                                             c1=c1, c2=c2)
 
