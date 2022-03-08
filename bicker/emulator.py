@@ -1,9 +1,6 @@
-'''
-Flie contains Classes for the idividual component emulators.
-'''
 from tensorflow.keras.models import load_model
 import numpy as np
-from .training_funcs import UniformScaler, LogScaler
+from .training_funcs import UniformScaler
 from . import helper as helper_funcs
 from scipy.interpolate import interp1d
 import os
@@ -86,3 +83,30 @@ class component_emulator:
             return np.split(preds, self.nKer, axis=1)
         else:
             return preds
+
+class bispectrum:
+    '''
+    Class for emulating the galaxy bispectrum by combining emulated kernerl
+    predictions with bias parameters.
+    '''
+
+    def __init__(self):
+
+        # Initalise all component emulators.
+        self.components = []
+        '''List containg the component emulators'''
+        for g in range(7):
+            self.components.append(component_emulator(g))
+
+    def emu_predict(self, cosmo, f, b1=None, b2=None, bG2=None, c1=None, c2=None):
+
+        # Make predictions for all kernels.
+        kernel_group_preds = []
+        for g in range(7):
+            kernel_group_preds.append(self.components[g].emu_predict(cosmo))
+
+        return helper_funcs.combine_kernels(kernel_group_preds, f,
+                                            b1=b1, b2=b2, bG2=bG2,
+                                            c1=c1, c2=c2)
+
+        
