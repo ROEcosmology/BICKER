@@ -4,6 +4,8 @@ from tensorflow.keras.callbacks import ReduceLROnPlateau, EarlyStopping
 import os
 import argparse
 import time
+from bicker import helper
+import glob
 
 parser = argparse.ArgumentParser()
 parser.add_argument("--inputX", help="Directory with feature files.", 
@@ -68,82 +70,33 @@ np.save(cache_path+"scalers/xscaler_min_diff",
         np.vstack([xscaler.min_val,xscaler.diff]))
 print("Done.")
 
-files1 = ["full_c2_b2_f.npy", 
-          "full_c2_b1_b2.npy",  
-          "full_c2_b1_b1.npy",  
-          "full_c2_b1_f.npy",
-          "full_c2_b1_f.npy",
-          "full_c1_b1_b1_f.npy",
-          "full_c1_b2_f.npy",
-          "full_c1_b1_b2.npy",
-          "full_c1_b1_b1.npy",
-          "full_c2_b1_b1_f.npy", 
-          "full_c1_b1_f.npy"]
+# Check the number of files in the components directory.
+if not len(os.listdir(inputY_path)) == 52:
+    raise(ValueError("The inputY directory only contains {0} files!. Should be 52.".format(len(os.listdir(inputY_path)))))
 
-files1_2 = ["full_c2_b1_f_f.npy",
-          "full_c1_f_f.npy",
-          "full_c1_f_f_f.npy",
-          "full_c2_f_f.npy",
-          "full_c2_f_f_f.npy",
-          "full_c1_f_f.npy",
-          "full_c1_b1_f_f.npy",]
+# Find start of all file names in components directroy.
+# This is super hacky.
+# TODO: Finda a better way of ignoring this start of the file name.
+file_start = os.listdir(inputY_path)[0].split("_")[0]
 
-files2 = ["full_c1_c1_f_f.npy", 
-          "full_c2_c2_b1_f.npy",  
-          "full_c2_c1_b1_f.npy",  
-          "full_c2_c1_b1.npy",
-          "full_c2_c1_b2.npy",
-          "full_c2_c2_f_f.npy",
-          "full_c1_c1_f.npy",
-          "full_c2_c2_b1.npy",
-          "full_c2_c2_b2.npy",
-          "full_c2_c2_f.npy", 
-          "full_c2_c1_b1_f.npy", 
-          "full_c2_c1_f.npy",
-          "full_c1_c1_b1_f.npy",
-          "full_c1_c1_b1.npy",
-          "full_c1_c1_b2.npy",
-          "full_c1_c1_f_f.npy"]
-
-files3 = ["full_c1_c1_bG2.npy",
-          "full_c2_c2_bG2.npy",
-          "full_c2_c1_bG2.npy"]
-
-files4 = ["full_c1_b1_bG2.npy",
-          "full_c1_bG2_f.npy",
-          "full_c2_bG2_f.npy", 
-          "full_c2_b1_bG2.npy"]
-
-files5 = ["full_b1_f_f.npy",
-          "full_b1_b1_f_f.npy",
-          "full_b1_b1_b2.npy", 
-          "full_b2_f_f.npy", 
-          "full_b1_b1_b1.npy",
-          "full_b1_b1_b1_f.npy",
-          "full_b1_b1_f.npy",
-          "full_b1_f_f_f.npy",
-          "full_f_f_f.npy",
-          "full_f_f_f_f.npy",
-          "full_b1_b2_f.npy"]
-
-files6 = ["full_bG2_f_f.npy",
-          "full_b1_b1_bG2.npy",
-          "full_b1_bg2_f.npy"]
-
-groups = [files1, files1_2, files2, files3, files4, files5, files6]
-
-for i, group in enumerate(groups):
+for i in range(7):
 
     # Extract name for componenet from file name.
     component_name = "group_{0}".format(i)
 
+    # Get list of components in group i.
+    group_list = helper.group_info(i, file_list=True)
+
     # Load the data.
     print("Loading group: {0}".format(i))
     kernels = []
-    for file in group:
-            kernels.append(np.load(inputY_path+file))
+    for component in group_list:
+            file = "{path}{start}_{component}.npy".format(path=inputY_path, 
+                                                          start=file_start,
+                                                          component=component)
+            kernels.append(np.load(file))
             print("Loaded {0}".format(file))
-    print("Done. Loaded {0} kernels.".format(len(group)))
+    print("Done. Loaded {0} kernels.".format(len(group_list)))
     kernels = np.hstack(kernels)
 
     print("Rescaling kernels...")
