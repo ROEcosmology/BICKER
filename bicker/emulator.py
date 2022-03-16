@@ -22,14 +22,15 @@ class component_emulator:
 
     Args:
         group (int) : Group identifier.
+        multipole (int) : Desired multipole. Can be either 0 or 2.
     '''
 
-    def __init__(self, group):
+    def __init__(self, group, multipole):
 
         self.kbins = kbins
         '''The k-bins at which predictions will be made.'''
 
-        components_path = cache_path+"components/"
+        components_path = cache_path+"B{l}/".format(l=multipole)+"components/"
 
         group_id = "group_{0}".format(group)
         self.nKer = helper_funcs.group_info(group)
@@ -39,7 +40,7 @@ class component_emulator:
 
         self.model = model
 
-        scalers_path = cache_path+"scalers/"
+        scalers_path = cache_path+"B{l}/".format(l=multipole)+"scalers/"
 
         xscaler = UniformScaler()
         yscaler = UniformScaler()
@@ -88,15 +89,18 @@ class bispectrum:
     '''
     Class for emulating the galaxy bispectrum by combining emulated kernerl
     predictions with bias parameters.
+
+    Args:
+        multipole (int) : Desired multipole. Can be either 0 or 2.
     '''
 
-    def __init__(self):
+    def __init__(self, multipole):
 
         # Initalise all component emulators.
         self.components = []
         '''List containg the component emulators'''
         for g in range(7):
-            self.components.append(component_emulator(g))
+            self.components.append(component_emulator(g, multipole))
 
     def emu_predict(self, cosmo, b1=None, b2=None, bG2=None, c1=None, c2=None):
 
