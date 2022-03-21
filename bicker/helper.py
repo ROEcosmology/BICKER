@@ -22,10 +22,14 @@ bias_lists = [["c2_b2_f", "c2_b1_b2", "c2_b1_b1",
                "f_f_f_f", "b1_b2_f"], 
               ["bG2_f_f", "b1_b1_bG2", "b1_bG2_f"]]
 
+shot_list = ["b1_b1", "b1_c2", "b1_c1", "b1_f",
+             "f_b1", "f_c1", "f_c2", "f_f"]
+
 def group_info(group, file_list=False):
     '''
     Args:
-        group (int) : Group identifier.
+        group (int, str) : Group identifier. ``int`` in range 0-6, 
+         or ``shot``.
         file_list (bool) : If ``True`` returns list of file containing
          the group kernels. Default is ``False``.
 
@@ -34,9 +38,15 @@ def group_info(group, file_list=False):
     '''
     
     if file_list:
-        return bias_lists[group]
+        if type(group) is int:
+            return bias_lists[group]
+        elif file_list and type(group) is str:
+            return shot_list
     else:
-        return len(bias_lists[group])
+        if type(group) is int:
+            return len(bias_lists[group])
+        elif file_list and type(group) is str:
+            return len(shot_list)
 
 def combine_kernels(kernel_groups, b1=None, b2=None, bG2=None, c1=None, c2=None,
                     groups=None):
