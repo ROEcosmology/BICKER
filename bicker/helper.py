@@ -22,8 +22,10 @@ bias_lists = [["c2_b2_f", "c2_b1_b2", "c2_b1_b1",
                "f_f_f_f", "b1_b2_f"], 
               ["bG2_f_f", "b1_b1_bG2", "b1_bG2_f"]]
 
-shot_list = ["b1_b1", "b1_c2", "b1_c1", "b1_f",
-             "f_b1", "f_c1", "f_c2", "f_f"]
+# The first 4 terms in this list are power spectrum kernels,
+# the last 4 are bispectrum kernels.
+shot_list = ["f_b1", "f_c2", "f_c1", "f_f",
+             "b1_f", "b1_c1", "b1_c2", "b1_b1"]
 
 def group_info(group, file_list=False):
     '''
@@ -38,15 +40,15 @@ def group_info(group, file_list=False):
     '''
     
     if file_list:
-        if type(group) is int:
-            return bias_lists[group]
-        elif file_list and type(group) is str:
+        if type(group) is str:
             return shot_list
+        else:
+            return bias_lists[group]
     else:
-        if type(group) is int:
-            return len(bias_lists[group])
-        elif file_list and type(group) is str:
+        if type(group) is str:
             return len(shot_list)
+        else:
+            return len(bias_lists[group])
 
 def combine_kernels(kernel_groups, b1=None, b2=None, bG2=None, c1=None, c2=None,
                     groups=None):

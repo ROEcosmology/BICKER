@@ -21,7 +21,7 @@ class component_emulator:
     along with the scalers required to make predictions with the NN.
 
     Args:
-        group (int) : Group identifier.
+        group (int, str) : Group identifier. Can be ``'shot'`` or ``int`` 0-6.
         multipole (int) : Desired multipole. Can be either 0 or 2.
     '''
 
@@ -30,17 +30,25 @@ class component_emulator:
         self.kbins = kbins
         '''The k-bins at which predictions will be made.'''
 
-        components_path = cache_path+"B{l}/".format(l=multipole)+"components/"
+        if group is not 'shot':
+            components_path = cache_path+"B{l}/".format(l=multipole)+"components/"
+            scalers_path = cache_path+"B{l}/".format(l=multipole)+"scalers/"
+            group_id = "group_{0}".format(group)
+        elif group is 'shot':
+            if multipole==2:
+                raise NotImplementedError("Shot noise terms not yet implemented for B2.")
+            else:
+                components_path = cache_path+"B{l}/shot/".format(l=multipole)+"components/"
+                scalers_path = cache_path+"B{l}/shot/".format(l=multipole)+"scalers/"
+                group_id = "group_0"
 
-        group_id = "group_{0}".format(group)
         self.nKer = helper_funcs.group_info(group)
 
         # Load the NN.
         model = load_model(components_path+group_id+"/member_0", compile=False)
 
         self.model = model
-
-        scalers_path = cache_path+"B{l}/".format(l=multipole)+"scalers/"
+        '''The NN that forms the component emulator.'''
 
         xscaler = UniformScaler()
         yscaler = UniformScaler()
@@ -92,15 +100,22 @@ class bispectrum:
 
     Args:
         multipole (int) : Desired multipole. Can be either 0 or 2.
+        use_shot (bool) : Load shot noise kernels?
     '''
 
-    def __init__(self, multipole):
+    def __init__(self, multipole, use_shot=False):
 
         # Initalise all component emulators.
         self.components = []
-        '''List containg the component emulators'''
+        '''List containg the component emulators.'''
         for g in range(7):
             self.components.append(component_emulator(g, multipole))
+
+        self.use_shot = use_shot
+        if use_shot:
+            # Load shot noise component emulator.
+            self.shot = component_emulator('shot', multipole)
+            '''The shot noise component emulator.'''
 
     def emu_predict(self, cosmo, b1=None, b2=None, bG2=None, c1=None, c2=None):
 
@@ -109,8 +124,21 @@ class bispectrum:
         for g in range(7):
             kernel_group_preds.append(np.stack(self.components[g].emu_predict(cosmo)))
 
-        return helper_funcs.combine_kernels(kernel_group_preds,
-                                            b1=b1, b2=b2, bG2=bG2,
-                                            c1=c1, c2=c2)
+        bispec_pred = helper_funcs.combine_kernels(kernel_group_preds,
+                                                   b1=b1, b2=b2, bG2=bG2,
+                                                   c1=c1, c2=c2)
+
+        # Make shot noise predictions.
+        if self.use_shot:
+            shot_preds = np.stack(self.shot.emu_predict(cosmo))
+            shot_preds = helper_funcs.combine_kernels([shot_preds],
+                                                      b1=b1, b2=b2, bG2=bG2,
+                                                      c1=c1, c2=c2, 
+                                                      groups=['shot'])
+
+        if self.use_shot:
+            return bispec_pred+shot_preds
+        else:
+            return bispec_pred
 
         
