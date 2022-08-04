@@ -64,6 +64,7 @@ class component_emulator:
         yscaler.diff = ymin_diff[1, :]
 
         self.scalers = (xscaler, yscaler)
+        '''The scalers used for preprocessing inputs and postprocessing outputs.'''
 
     def emu_predict(self, X, split=True):
         '''
@@ -95,12 +96,12 @@ class component_emulator:
 
 class bispectrum:
     '''
-    Class for emulating the galaxy bispectrum by combining emulated kernerl
+    Class for emulating the galaxy bispectrum by combining emulated kernel
     predictions with bias parameters.
 
     Args:
         multipole (int) : Desired multipole. Can be either 0 or 2.
-        use_shot (bool) : Load shot noise kernels?
+        use_shot (bool) : Load shot noise kernels? Default is ``False``.
     '''
 
     def __init__(self, multipole, use_shot=False):
@@ -140,5 +141,72 @@ class bispectrum:
             return bispec_pred+shot_preds
         else:
             return bispec_pred
+
+class power:
+    '''
+    Class for emulating the galaxy power spectrum by combining emulated kernel
+    predictions with bias parameters.
+
+    Args:
+        multipole (int) : Desired multipole. Can be 0, 2, or 4.
+    '''
+
+    def __init__(self, multipole):
+
+        self.multipole = multipole
+
+        self.kbins = np.arange(.005,.3025,.0025)
+        '''The k-bins at which predictions will be made.'''
+
+        self.models = []
+        '''The NNs that the emulator is based. The first element is a NN that predicts kernels
+         specific to ``multipole``. The second predicts kernels that are relevant for all 
+         multipoles.'''
+
+        self.scalers = []
+        '''The scalers used for preprocessing inputs and postprocessing outputs.'''
+
+        for i in [multipole, 'extra']:
+            self.models.append(load_model(cache_path+f"powerspec/P{i}/components/member_0"))
+
+            xscaler = UniformScaler()
+            yscaler = UniformScaler()
+
+            xmin_diff = np.load(cache_path+f"powerspec/scalers/xscaler_min_diff.npy")
+            ymin_diff = np.load(cache_path+f"powerspec/P{i}/scalers/yscaler_min_diff.npy")
+
+            xscaler.min_val = xmin_diff[0, :]
+            xscaler.diff = xmin_diff[1, :]
+
+            yscaler.min_val = ymin_diff[0, :]
+            yscaler.diff = ymin_diff[1, :]
+
+            self.scalers.append((xscaler, yscaler))
+
+    def emu_predict(self, cosmo, bias):
+        '''
+        Make predictions with the emulator.
+
+        Args:
+            cosmo (array) : Array of cosmlogcial parameters
+             ``{omega_m, omega_b, h, As, ns}``.
+            bias (array) : Array of bias parameters
+             ``{b1, b2, bG2, bGamm3, b4, csl, cst}``.
+        '''
+
+        cosmo = np.atleast_2d(cosmo)
+
+        X_prime = self.scalers[0][0].transform(cosmo)
+
+        preds = self.scalers[0][1].inverse_transform(
+                self.models[0](X_prime))
+        preds = preds.reshape(cosmo.shape[0], int(preds.shape[1]/self.kbins.shape[0]), self.kbins.shape[0])
+
+        preds_ext = self.scalers[1][1].inverse_transform(
+                    self.models[1](X_prime))
+        preds_ext = preds_ext.reshape(cosmo.shape[0], int(preds_ext.shape[1]/self.kbins.shape[0]), self.kbins.shape[0])
+
+        return helper_funcs.powerspec_multipole((preds, preds_ext), 
+                                                bias, self.multipole)
 
         
