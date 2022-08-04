@@ -31,8 +31,8 @@ class component_emulator:
         '''The k-bins at which predictions will be made.'''
 
         if group is not 'shot':
-            components_path = cache_path+"B{l}/".format(l=multipole)+"components/"
-            scalers_path = cache_path+"B{l}/".format(l=multipole)+"scalers/"
+            components_path = cache_path+"bispec/B{l}/".format(l=multipole)+"components/"
+            scalers_path = cache_path+"bispec/B{l}/".format(l=multipole)+"scalers/"
             group_id = "group_{0}".format(group)
         elif group is 'shot':
             if multipole==2:
