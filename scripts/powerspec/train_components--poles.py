@@ -17,7 +17,7 @@ parser.add_argument("--cache", help="Path to save outputs.",
 parser.add_argument("--new_split", help='Use a new train test split? 0 for no, 1 for yes', 
                     default=0)
 parser.add_argument("--arch", help="Architecture for the component emulators. pass as a string i.e. '200 200'. This specifies two hidden layers with 200 nodes each.", 
-                    default="800 800")
+                    default="300 300")
 parser.add_argument("--verbose", help='Verbose for tensorflow.', default=0)
 args = parser.parse_args()
 
@@ -78,8 +78,8 @@ kernels = np.stack(kernels)
 print("Done.")
 
 # Check the shape of the kernel array.
-if not kernels.shape == (Nsamp, 37):
-    raise(ValueError(f"The kernel array has the wrong shape: {kernels.shape}. Should be: {(Nsamp, 37)}."))
+if not kernels.shape == (Nsamp, 37, 119):
+    raise(ValueError(f"The kernel array has the wrong shape: {kernels.shape}. Should be: {(Nsamp, 37, 119)}."))
 
 # Define dict with column ids in the kernel array for each multipole.
 pole_col_dict = {0: np.arange(16), 2: np.arange(17,28), 4: np.append(np.arange(28,33)[::-1], 16)[::-1],
