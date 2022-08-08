@@ -64,7 +64,7 @@ if not len(os.listdir(inputY_path)) == 8:
 component_name = "group_0"
 
 # Get list of components in group i.
-file_list = os.listdir(inputY_path)
+file_list = sorted(os.listdir(inputY_path))
 
 # Load the data.
 print("Loading data...")

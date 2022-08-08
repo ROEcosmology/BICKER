@@ -24,10 +24,10 @@ bispec_bias_lists = [["c2_b2_f", "c2_b1_b2", "c2_b1_b1",
                      ["bG2_f_f", "b1_b1_bG2", "b1_bG2_f"]]
 
 
-# The first 4 terms in this list are power spectrum kernels,
-# the last 4 are bispectrum kernels.
-shot_list = ["f_b1", "f_c2", "f_c1", "f_f",
-             "b1_f", "b1_c1", "b1_c2", "b1_b1"]
+# The first 4 terms in this list are bispectrum kernels,
+# the last 4 are power spectrum kernels.
+shot_list = ["b1_b1", "b1_c1", "b1_c2", "b1_f",
+             "f_b1", "f_c1", "f_c2", "f_f"]
 
 def group_info(group, file_list=False):
     '''
