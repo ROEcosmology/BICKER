@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>bicker.helper &mdash; BICKER 0.0.9 documentation</title>
+      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../index.html" class="icon icon-home"> BICKER
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../api.html">API Reference</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">BICKER</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
+      <li>bicker.helper</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/api/helper.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  
+<style>
+/* CSS overrides for sphinx_rtd_theme */
+
+/* 24px margin */
+.nbinput.nblast.container,
+.nboutput.nblast.container {
+    margin-bottom: 19px;  /* padding has already 5px */
+}
+
+/* ... except between code cells! */
+.nblast.container + .nbinput.container {
+    margin-top: -19px;
+}
+
+.admonition > p:before {
+    margin-right: 4px;  /* make room for the exclamation icon */
+}
+
+/* Fix math alignment, see https://github.com/rtfd/sphinx_rtd_theme/pull/686 */
+.math {
+    text-align: unset;
+}
+</style>
+<section id="module-bicker.helper">
+<span id="bicker-helper"></span><h1>bicker.helper<a class="headerlink" href="#module-bicker.helper" title="Permalink to this headline"></a></h1>
+<dl class="py function">
+<dt class="sig sig-object py" id="bicker.helper.combine_kernels">
+<span class="sig-prename descclassname"><span class="pre">bicker.helper.</span></span><span class="sig-name descname"><span class="pre">combine_kernels</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">kernel_groups</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">b1</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">b2</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bG2</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">c1</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">c2</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">groups</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#bicker.helper.combine_kernels" title="Permalink to this definition"></a></dt>
+<dd><p>Function for combing bias parameters and kernels.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>kernel_groups</strong> (<em>list</em>) – List of arrays containing kernels.
+Each list element should have shape <code class="docutils literal notranslate"><span class="pre">(n_ker,</span> <span class="pre">n_samp,</span> <span class="pre">n_k)</span></code>.
+With <code class="docutils literal notranslate"><span class="pre">n_samp</span></code> being the number of predictions to be made,
+<code class="docutils literal notranslate"><span class="pre">n_ker</span></code> being the number of kernels in that group,
+and <code class="docutils literal notranslate"><span class="pre">n_k</span></code> being the number of k-values.
+Assumes growth rate f is inlcuded in the kernel.</p></li>
+<li><p><strong>f</strong> (<em>array</em>) – Array containing growth rate.
+Should habe shape <code class="docutils literal notranslate"><span class="pre">(n_samp,)</span></code>.</p></li>
+<li><p><strong>b1</strong> (<em>array</em>) – Array containig b1 values.
+Should habe shape <code class="docutils literal notranslate"><span class="pre">(n_samp,)</span></code>. Default is <code class="docutils literal notranslate"><span class="pre">None</span></code>.</p></li>
+<li><p><strong>b2</strong> (<em>array</em>) – Array containig b2 values.
+Should habe shape <code class="docutils literal notranslate"><span class="pre">(n_samp,)</span></code>. Default is <code class="docutils literal notranslate"><span class="pre">None</span></code>.</p></li>
+<li><p><strong>bG2</strong> (<em>array</em>) – Array containig bG2 values.
+Should habe shape <code class="docutils literal notranslate"><span class="pre">(n_samp,)</span></code>. Default is <code class="docutils literal notranslate"><span class="pre">None</span></code>.</p></li>
+<li><p><strong>c1</strong> (<em>array</em>) – Array containig c1 values.
+Should habe shape <code class="docutils literal notranslate"><span class="pre">(n_samp,)</span></code>. Default is <code class="docutils literal notranslate"><span class="pre">None</span></code>.</p></li>
+<li><p><strong>c2</strong> (<em>array</em>) – Array containig c2 values.
+Should habe shape <code class="docutils literal notranslate"><span class="pre">(n_samp,)</span></code>. Default is <code class="docutils literal notranslate"><span class="pre">None</span></code>.</p></li>
+<li><p><strong>groups</strong> (<em>list</em>) – List of <code class="docutils literal notranslate"><span class="pre">int</span></code> that correspond to the group ids
+for the groups in <code class="docutils literal notranslate"><span class="pre">kernel_groups</span></code>. Default is <code class="docutils literal notranslate"><span class="pre">None</span></code>,
+in which case it is assumed all groups are passed.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Array containig the combined kernels and bias parameters.
+Each list item will have shape <code class="docutils literal notranslate"><span class="pre">(n_samp,</span> <span class="pre">n_k)</span></code>.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="bicker.helper.extra_bias">
+<span class="sig-prename descclassname"><span class="pre">bicker.helper.</span></span><span class="sig-name descname"><span class="pre">extra_bias</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">bias</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#bicker.helper.extra_bias" title="Permalink to this definition"></a></dt>
+<dd><p>Function for combining bias parameters for the terms that are common
+for all multipoles.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>bias</strong> (<em>array</em>) – Array of bias parameters <code class="docutils literal notranslate"><span class="pre">{b1,</span> <span class="pre">b2,</span> <span class="pre">bG2,</span> <span class="pre">bGamm3,</span> <span class="pre">b4,</span> <span class="pre">csl,</span> <span class="pre">cst}</span></code>.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Array of shape (n, 3). If all bias parameters were floats <code class="docutils literal notranslate"><span class="pre">n=1</span></code>.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="bicker.helper.group_info">
+<span class="sig-prename descclassname"><span class="pre">bicker.helper.</span></span><span class="sig-name descname"><span class="pre">group_info</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">group</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">file_list</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#bicker.helper.group_info" title="Permalink to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>group</strong> (<em>int</em><em>, </em><em>str</em>) – Group identifier. <code class="docutils literal notranslate"><span class="pre">int</span></code> in range 0-6,
+or <code class="docutils literal notranslate"><span class="pre">shot</span></code>.</p></li>
+<li><p><strong>file_list</strong> (<em>bool</em>) – If <code class="docutils literal notranslate"><span class="pre">True</span></code> returns list of file containing
+the group kernels. Default is <code class="docutils literal notranslate"><span class="pre">False</span></code>.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Information about the kernel group.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="bicker.helper.hex_bias">
+<span class="sig-prename descclassname"><span class="pre">bicker.helper.</span></span><span class="sig-name descname"><span class="pre">hex_bias</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">bias</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#bicker.helper.hex_bias" title="Permalink to this definition"></a></dt>
+<dd><p>Function for combining bias parameters for power spectrum quadrupole.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>bias</strong> (<em>array</em>) – Array of bias parameters <code class="docutils literal notranslate"><span class="pre">{b1,</span> <span class="pre">b2,</span> <span class="pre">bG2,</span> <span class="pre">bGamm3,</span> <span class="pre">b4,</span> <span class="pre">csl,</span> <span class="pre">cst}</span></code>.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Array of shape (n, 11). If all bias parameters were floats <code class="docutils literal notranslate"><span class="pre">n=1</span></code>.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="bicker.helper.mono_bias">
+<span class="sig-prename descclassname"><span class="pre">bicker.helper.</span></span><span class="sig-name descname"><span class="pre">mono_bias</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">bias</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#bicker.helper.mono_bias" title="Permalink to this definition"></a></dt>
+<dd><p>Function for combining bias parameters for power spectrum monopole.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>bias</strong> (<em>array</em>) – Array of bias parameters <code class="docutils literal notranslate"><span class="pre">{b1,</span> <span class="pre">b2,</span> <span class="pre">bG2,</span> <span class="pre">bGamm3,</span> <span class="pre">csl}</span></code>.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Array of shape (n, 16). If all bias parameters were floats <code class="docutils literal notranslate"><span class="pre">n=1</span></code>.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="bicker.helper.powerspec_multipole">
+<span class="sig-prename descclassname"><span class="pre">bicker.helper.</span></span><span class="sig-name descname"><span class="pre">powerspec_multipole</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">P_n</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bias</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">multipole</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#bicker.helper.powerspec_multipole" title="Permalink to this definition"></a></dt>
+<dd><p>Function for computing power spectrum multipoles via a
+combination of bias parameters and kernels.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>P_n</strong> (<em>tuple</em>) – Tuple of arrays containing power spectrum kernels.
+The first element should be those kernels that are unique to
+<code class="docutils literal notranslate"><span class="pre">multipole</span></code>, the second should be those that are shared by all
+multipoles.</p></li>
+<li><p><strong>bias</strong> (<em>array</em>) – Array of bias parameters <code class="docutils literal notranslate"><span class="pre">{b1,</span> <span class="pre">b2,</span> <span class="pre">bG2,</span> <span class="pre">bGamm3,</span> <span class="pre">b4,</span> <span class="pre">csl,</span> <span class="pre">cst}</span></code>.</p></li>
+<li><p><strong>multipole</strong> (<em>int</em>) – Multipole order. Must corespond to <code class="docutils literal notranslate"><span class="pre">P_n</span></code>. Can be
+<code class="docutils literal notranslate"><span class="pre">0</span></code>, <code class="docutils literal notranslate"><span class="pre">2</span></code>, or <code class="docutils literal notranslate"><span class="pre">4</span></code>.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Array containing power spectrum multipole predictions.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="bicker.helper.quad_bias">
+<span class="sig-prename descclassname"><span class="pre">bicker.helper.</span></span><span class="sig-name descname"><span class="pre">quad_bias</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">bias</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#bicker.helper.quad_bias" title="Permalink to this definition"></a></dt>
+<dd><p>Function for combining bias parameters for power spectrum quadrupole.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>bias</strong> (<em>array</em>) – Array of bias parameters <code class="docutils literal notranslate"><span class="pre">{b1,</span> <span class="pre">b2,</span> <span class="pre">bG2,</span> <span class="pre">bGamm3,</span> <span class="pre">b4,</span> <span class="pre">csl,</span> <span class="pre">cst}</span></code>.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Array of shape (n, 11). If all bias parameters were floats <code class="docutils literal notranslate"><span class="pre">n=1</span></code>.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022, Jamie Donald-McCann.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

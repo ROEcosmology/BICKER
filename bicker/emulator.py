@@ -119,6 +119,28 @@ class bispectrum:
             '''The shot noise component emulator.'''
 
     def emu_predict(self, cosmo, b1=None, b2=None, bG2=None, c1=None, c2=None):
+        '''
+        Make predictions with the emulator.
+
+        Args:
+            cosmo (array) : Array of cosmlogcial parameters
+             ``{omega_m, omega_b, h, As, ns}``. When making predictions on batch
+             should have shape ``(nbatch, 5)``.
+            b1 (float, array) : When making predictions on batch should have
+             shape ``(nbatch, )``.
+            b2 (float, array) : When making predictions on batch should have
+             shape ``(nbatch, )``.
+            bG2 (float, array) : When making predictions on batch should have
+             shape ``(nbatch, )``.
+            c1 (float, array) : When making predictions on batch should have
+             shape ``(nbatch, )``.
+            c2 (float, array) : When making predictions on batch should have
+             shape ``(nbatch, )``.
+
+        Returns:
+            Array with shape ``(nbatch, nk)``. If a single set of parameters was passed
+            ``nbatch=1``.
+        '''
 
         # Make predictions for all kernels.
         kernel_group_preds = []
@@ -189,9 +211,15 @@ class power:
 
         Args:
             cosmo (array) : Array of cosmlogcial parameters
-             ``{omega_m, omega_b, h, As, ns}``.
+             ``{omega_m, omega_b, h, As, ns}``. When making predictions on batch
+             should have shape ``(nbatch, 5)``.
             bias (array) : Array of bias parameters
-             ``{b1, b2, bG2, bGamm3, b4, csl, cst}``.
+             ``{b1, b2, bG2, bGamm3, b4, csl, cst}``. When making predictions on
+             batch should have shape ``(nbatch, 7)``.
+
+        Returns:
+            Array with shape ``(nbatch, nk)``. If a single set of parameters was passed
+            ``nbatch=1``.
         '''
 
         cosmo = np.atleast_2d(cosmo)
