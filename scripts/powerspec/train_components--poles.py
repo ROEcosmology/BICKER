@@ -90,14 +90,12 @@ for k in pole_col_dict:
     # Select the relevant columns from kernel array.
     trainY = np.hstack([kernels[:,i,:] for i in pole_col_dict[k]])[train_id]
 
-    print("Rescaling kernels...")
+    print(f"Rescaling kernels P{k}...")
     yscaler = Train.UniformScaler()
     yscaler.fit(trainY)
     trainy = yscaler.transform(trainY)
     # Check directory.
-    if not os.path.isdir(cache_path+f"P{k}/scalers"):
-            print("Creating directory: ", cache_path+f"P{k}/scalers")
-            os.mkdir(cache_path+f"P{k}/scalers")
+    os.makedirs(os.path.join(cache_path, f"P{k}", "scalers"), exist_ok=True)
     # Save parameters of scaler.
     np.save(cache_path+f"P{k}/scalers/yscaler_min_diff",
         np.vstack([yscaler.min_val,yscaler.diff]))
