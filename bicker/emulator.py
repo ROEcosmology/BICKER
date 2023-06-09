@@ -173,7 +173,7 @@ class power:
         multipole (int) : Desired multipole. Can be 0, 2, or 4.
     '''
 
-    def __init__(self, multipole):
+    def __init__(self, multipole, alt_cache_path=None):
 
         self.multipole = multipole
 
@@ -187,6 +187,9 @@ class power:
 
         self.scalers = []
         '''The scalers used for preprocessing inputs and postprocessing outputs.'''
+
+        if not (alt_cache_path is None):
+            cache_path = alt_cache_path
 
         for i in [multipole, 'extra']:
             self.models.append(load_model(cache_path+f"powerspec/P{i}/components/member_0"))
