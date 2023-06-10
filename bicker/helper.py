@@ -193,23 +193,28 @@ def hex_bias(bias):
                       bias[:,2],
                       2*bias[:,5]]).T
 
-def extra_bias(bias):
+def extra_bias(bias, multipole):
     '''
     Function for combining bias parameters for the terms that are common
     for all multipoles.
     
     Args:
         bias (array) : Array of bias parameters ``{b1, b2, bG2, bGamm3, b4, csl, cst}``.
-
+        multipole (int) : Multipole order. Must corespond to ``P_n``. Can be
+         ``0``, ``2``, or ``4``.
+         
     Returns:
         Array of shape (n, 3). If all bias parameters were floats ``n=1``.
     '''
 
     bias = np.atleast_2d(bias)
 
-    return np.vstack([bias[:,4]*bias[:,-1]*bias[:,0]**2,
-                      bias[:,4]*bias[:,-1]*bias[:,0],
-                      bias[:,4]*bias[:,-1]]).T
+    constants_dict = {0: [7/8, 5/4, 35/72], 2: [55/22, 275/66, 175/99], 4: [1, 390/143, 210/143]}
+    constants = constants_dict.get(multipole)
+
+    return np.vstack([bias[:,4]*constants[0]*bias[:,0]**2,
+                      bias[:,4]*constants[1]*bias[:,0],
+                      bias[:,4]*constants[2]]).T
 
 comb_bias_fdict = {0: mono_bias, 2: quad_bias, 4: hex_bias,
                    'extra': extra_bias}
@@ -233,6 +238,10 @@ def powerspec_multipole(P_n, bias, multipole):
     '''
 
     combo_bs = comb_bias_fdict[multipole](bias)
-    combo_bs_ext = comb_bias_fdict['extra'](bias)
+    combo_bs_ext = comb_bias_fdict['extra'](bias, multipole)
+    
+    scale_factor = np.arange(.005, .3025, .0025)**2
+    P_n_shared = P_n[1] * scale_factor[None, None, :]
 
-    return np.einsum('nb,nbx->nx', combo_bs, P_n[0]) + np.einsum('nb,nbx->nx', combo_bs_ext, P_n[1])
+    return np.einsum('nb,nbx->nx', combo_bs, P_n[0]) + np.einsum('nb,nbx->nx', combo_bs_ext, P_n_shared)
+  
