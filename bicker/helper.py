@@ -152,7 +152,7 @@ def quad_bias(bias):
     Function for combining bias parameters for power spectrum quadrupole.
     
     Args:
-        bias (array) : Array of bias parameters ``{b1, b2, bG2, bGamm3, b4, csl, cst}``.
+        bias (array) : Array of bias parameters ``{b1, b2, bG2, bGamm3, b4, csl}``.
 
     Returns:
         Array of shape (n, 11). If all bias parameters were floats ``n=1``.
@@ -177,7 +177,7 @@ def hex_bias(bias):
     Function for combining bias parameters for power spectrum quadrupole.
     
     Args:
-        bias (array) : Array of bias parameters ``{b1, b2, bG2, bGamm3, b4, csl, cst}``.
+        bias (array) : Array of bias parameters ``{b1, b2, bG2, bGamm3, b4, csl}``.
 
     Returns:
         Array of shape (n, 11). If all bias parameters were floats ``n=1``.
@@ -199,7 +199,7 @@ def extra_bias(bias, multipole):
     for all multipoles.
     
     Args:
-        bias (array) : Array of bias parameters ``{b1, b2, bG2, bGamm3, b4, csl, cst}``.
+        bias (array) : Array of bias parameters ``{b1, b2, bG2, bGamm3, b4, csl}``.
         multipole (int) : Multipole order. Must corespond to ``P_n``. Can be
          ``0``, ``2``, or ``4``.
          
@@ -239,9 +239,6 @@ def powerspec_multipole(P_n, bias, multipole):
 
     combo_bs = comb_bias_fdict[multipole](bias)
     combo_bs_ext = comb_bias_fdict['extra'](bias, multipole)
-    
-    scale_factor = np.arange(.005, .3025, .0025)**2
-    P_n_shared = P_n[1] * scale_factor[None, None, :]
 
     return np.einsum('nb,nbx->nx', combo_bs, P_n[0]) + np.einsum('nb,nbx->nx', combo_bs_ext, P_n_shared)
   
