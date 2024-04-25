@@ -37,6 +37,8 @@ cosmos = np.vstack(cosmos)
 Nsamp = cosmos.shape[0]
 print("Done.")
 
+os.makedirs(cache_path, exist_ok=True)
+
 print("Splitting into train and test sets...")
 # Check directory.
 if os.path.isfile(cache_path+"split/train.npy") and not new_split:

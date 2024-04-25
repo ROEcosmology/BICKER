@@ -6,7 +6,7 @@ bispec_bias_lists = [["c2_b2_f", "c2_b1_b2", "c2_b1_b1",
                       "c1_b2_f", "c1_b1_b2", "c1_b1_b1",
                       "c2_b1_b1_f", "c1_b1_f"], 
                      ["c2_b1_f_f", "c1_f_f", "c1_f_f_f",
-                      "c2_f_f", "c2_f_f_f", "c1_f_f",
+                      "c2_f_f", "c2_f_f_f",
                       "c1_b1_f_f"], 
                      ["c1_c1_f_f", "c2_c2_b1_f", "c2_c1_b1_f",  
                       "c2_c1_b1", "c2_c1_b2", "c2_c2_f_f",
@@ -22,6 +22,22 @@ bispec_bias_lists = [["c2_b2_f", "c2_b1_b2", "c2_b1_b1",
                       "b1_b1_f", "b1_f_f_f", "f_f_f",
                       "f_f_f_f", "b1_b2_f"], 
                      ["bG2_f_f", "b1_b1_bG2", "b1_bG2_f"]]
+
+bispec_bias_sorted_kernels = ['b1_b1_b1', 'b1_b1_b2', 'b1_b1_bG2', 'b1_b1_f', 'b1_b1_b1_f', 'b1_b1_f_f', 
+                     'b1_b2_f', 'b1_bG2_f', 'b1_f_f', 
+                     'b1_f_f_f', 'b2_f_f', 'bG2_f_f', 'f_f_f', 'f_f_f_f', 
+                     'c1_b1_b1', 'c1_b1_b2', 'c1_b1_bG2', 'c1_b1_f', 'c1_b1_b1_f', 'c1_b1_f_f', 'c1_b2_f', 
+                     'c1_bG2_f', 'c1_f_f', 'c1_f_f_f', 'c1_c1_b1', 'c1_c1_b2', 'c1_c1_bG2', 'c1_c1_f', 
+                     'c1_c1_b1_f', 'c1_c1_f_f', 'c2_b1_b1', 'c2_b1_b2', 'c2_b1_bG2', 'c2_b1_f', 'c2_b1_b1_f', 
+                     'c2_b1_f_f', 'c2_b2_f', 'c2_bG2_f', 'c2_f_f', 'c2_f_f_f', 'c2_c1_b1', 'c2_c1_b2', 
+                     'c2_c1_bG2', 'c2_c1_f', 'c2_c1_b1_f', 'c2_c1_f_f', 'c2_c2_b1', 'c2_c2_b2', 'c2_c2_bG2', 
+                     'c2_c2_f', 'c2_c2_b1_f', 'c2_c2_f_f',
+                    'Bshot_b1_b1', 'Bshot_b1_f', 'Bshot_b1_c1', 'Bshot_b1_c2', 
+                    'Pshot_f_b1', 'Pshot_f_f', 'Pshot_f_c1', 'Pshot_f_c2',
+                    'fnlloc_b1_b1_b1', 'fnlloc_b1_b1_f', 'fnlloc_b1_f_f', 'fnlloc_f_f_f', 
+                    'fnlequi_b1_b1_b1', 'fnlequi_b1_b1_f', 'fnlequi_b1_f_f', 'fnlequi_f_f_f', 
+                    'fnlortho_b1_b1_b1', 'fnlortho_b1_b1_f', 'fnlortho_b1_f_f', 'fnlortho_f_f_f', 
+                    'fnlortho_LSS_b1_b1_b1', 'fnlortho_LSS_b1_b1_f', 'fnlortho_LSS_b1_f_f', 'fnlortho_LSS_f_f_f']
 
 
 # The first 4 terms in this list are bispectrum kernels,
@@ -40,7 +56,8 @@ def group_info(group, file_list=False):
     Returns:
         Information about the kernel group.
     '''
-    
+    print(group)
+    print(type(group))
     if file_list:
         if type(group) is str:
             return shot_list
@@ -199,7 +216,8 @@ def extra_bias(bias, multipole):
     for all multipoles.
     
     Args:
-        bias (array) : Array of bias parameters ``{b1, b2, bG2, bGamm3, b4, csl}``.
+        bias (array) : Array of bias parameters ``{b1, b2, bG2, bGamm3, b4, csl, cst}``.
+
         multipole (int) : Multipole order. Must corespond to ``P_n``. Can be
          ``0``, ``2``, or ``4``.
          
@@ -239,6 +257,4 @@ def powerspec_multipole(P_n, bias, multipole):
 
     combo_bs = comb_bias_fdict[multipole](bias)
     combo_bs_ext = comb_bias_fdict['extra'](bias, multipole)
-
-    return np.einsum('nb,nbx->nx', combo_bs, P_n[0]) + np.einsum('nb,nbx->nx', combo_bs_ext, P_n_shared)
-  
+    return np.einsum('nb,nbx->nx', combo_bs, P_n[0]) + np.einsum('nb,nbx->nx', combo_bs_ext, P_n[1])

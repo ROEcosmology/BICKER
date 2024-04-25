@@ -8,8 +8,10 @@ import pathlib
 
 # Path to directory containing the NN weights as well as scalers needed produce
 #  predictions with the NNs.
-cache_path = os.fsdecode(pathlib.Path(os.path.dirname(__file__)
-                                      ).parent.absolute())+"/bicker-cache/"
+#cache_path = os.fsdecode(pathlib.Path(os.path.dirname(__file__)
+#                                      ).parent.absolute())+"/bicker-cache/"
+
+#cache_path = '/home/rneveux/bicker_cache/z0.8/'
 
 kbins = np.arange(0.005,0.2025,.0025)
 
@@ -27,7 +29,7 @@ class component_emulator:
          will default to the repo directory. Default is ``None``. 
     '''
 
-    def __init__(self, group, multipole, alt_cache_path=None):
+    def __init__(self, group, multipole, kbins, cache_path):
 
         self.kbins = kbins
         '''The k-bins at which predictions will be made.'''
@@ -40,11 +42,8 @@ class component_emulator:
             scalers_path = cache_path+"bispec/B{l}/".format(l=multipole)+"scalers/"
             group_id = "group_{0}".format(group)
         elif group is 'shot':
-            if multipole==2:
-                raise NotImplementedError("Shot noise terms not yet implemented for B2.")
-            else:
-                components_path = cache_path+"B{l}/shot/".format(l=multipole)+"components/"
-                scalers_path = cache_path+"B{l}/shot/".format(l=multipole)+"scalers/"
+                components_path = cache_path+"bispec/B{l}/shot/".format(l=multipole)+"components/"
+                scalers_path = cache_path+"bispec/B{l}/shot/".format(l=multipole)+"scalers/"
                 group_id = "group_0"
 
         self.nKer = helper_funcs.group_info(group)
@@ -181,12 +180,11 @@ class power:
         alt_cache_path (str) : Path to cache for trained emulator. If ``None``
          will default to the repo directory. Default is ``None``. 
     '''
+    def __init__(self, multipole, kbins, cache_path):
 
-    def __init__(self, multipole, alt_cache_path=None):
+        self.multipole = int(multipole)
 
-        self.multipole = multipole
-
-        self.kbins = np.arange(.005,.3025,.0025)
+        self.kbins = kbins
         '''The k-bins at which predictions will be made.'''
 
         self.models = []
@@ -235,7 +233,6 @@ class power:
         '''
 
         cosmo = np.atleast_2d(cosmo)
-
         X_prime = self.scalers[0][0].transform(cosmo)
 
         preds = self.scalers[0][1].inverse_transform(
