@@ -25,12 +25,17 @@ class component_emulator:
     Args:
         group (int, str) : Group identifier. Can be ``'shot'`` or ``int`` 0-6.
         multipole (int) : Desired multipole. Can be either 0 or 2.
+        alt_cache_path (str) : Path to cache for trained emulator. If ``None``
+         will default to the repo directory. Default is ``None``. 
     '''
 
     def __init__(self, group, multipole, kbins, cache_path):
 
         self.kbins = kbins
         '''The k-bins at which predictions will be made.'''
+
+        if not (alt_cache_path is None):
+            cache_path = alt_cache_path
 
         if group is not 'shot':
             components_path = cache_path+"bispec/B{l}/".format(l=multipole)+"components/"
@@ -101,15 +106,17 @@ class bispectrum:
     Args:
         multipole (int) : Desired multipole. Can be either 0 or 2.
         use_shot (bool) : Load shot noise kernels? Default is ``False``.
+        alt_cache_path (str) : Path to cache for trained emulator. If ``None``
+         will default to the repo directory. Default is ``None``. 
     '''
 
-    def __init__(self, multipole, use_shot=False):
+    def __init__(self, multipole, use_shot=False, alt_cache_path=None):
 
         # Initalise all component emulators.
         self.components = []
         '''List containg the component emulators.'''
         for g in range(7):
-            self.components.append(component_emulator(g, multipole))
+            self.components.append(component_emulator(g, multipole, alt_cache_path))
 
         self.use_shot = use_shot
         if use_shot:
@@ -170,8 +177,9 @@ class power:
 
     Args:
         multipole (int) : Desired multipole. Can be 0, 2, or 4.
+        alt_cache_path (str) : Path to cache for trained emulator. If ``None``
+         will default to the repo directory. Default is ``None``. 
     '''
-
     def __init__(self, multipole, kbins, cache_path):
 
         self.multipole = int(multipole)
@@ -186,6 +194,9 @@ class power:
 
         self.scalers = []
         '''The scalers used for preprocessing inputs and postprocessing outputs.'''
+
+        if not (alt_cache_path is None):
+            cache_path = alt_cache_path
 
         for i in [multipole, 'extra']:
             self.models.append(load_model(cache_path+f"powerspec/P{i}/components/member_0"))

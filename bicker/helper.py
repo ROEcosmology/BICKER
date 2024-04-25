@@ -217,6 +217,7 @@ def extra_bias(bias, multipole):
     
     Args:
         bias (array) : Array of bias parameters ``{b1, b2, bG2, bGamm3, b4, csl, cst}``.
+
         multipole (int) : Multipole order. Must corespond to ``P_n``. Can be
          ``0``, ``2``, or ``4``.
          
@@ -228,7 +229,6 @@ def extra_bias(bias, multipole):
 
     constants_dict = {0: [7/8, 5/4, 35/72], 2: [55/22, 275/66, 175/99], 4: [1, 390/143, 210/143]}
     constants = constants_dict.get(multipole)
-
 
     return np.vstack([bias[:,4]*constants[0]*bias[:,0]**2,
                       bias[:,4]*constants[1]*bias[:,0],
@@ -257,5 +257,4 @@ def powerspec_multipole(P_n, bias, multipole):
 
     combo_bs = comb_bias_fdict[multipole](bias)
     combo_bs_ext = comb_bias_fdict['extra'](bias, multipole)
-    
     return np.einsum('nb,nbx->nx', combo_bs, P_n[0]) + np.einsum('nb,nbx->nx', combo_bs_ext, P_n[1])
