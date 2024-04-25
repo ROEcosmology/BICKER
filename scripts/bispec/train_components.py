@@ -34,7 +34,7 @@ for file in sorted(os.listdir(inputX_path)):
 cosmos = np.vstack(cosmos)
 # Only use first 1000
 # TODO: Remeber to take this out at some point.
-cosmos = cosmos[:1000]
+#cosmos = cosmos[:1000]
 Nsamp = cosmos.shape[0]
 print("Done.")
 

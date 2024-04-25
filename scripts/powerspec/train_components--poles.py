@@ -37,6 +37,8 @@ cosmos = np.vstack(cosmos)
 Nsamp = cosmos.shape[0]
 print("Done.")
 
+os.makedirs(cache_path, exist_ok=True)
+
 print("Splitting into train and test sets...")
 # Check directory.
 if os.path.isfile(cache_path+"split/train.npy") and not new_split:
@@ -82,7 +84,7 @@ if not kernels.shape == (Nsamp, 37, 119):
     raise(ValueError(f"The kernel array has the wrong shape: {kernels.shape}. Should be: {(Nsamp, 37, 119)}."))
 
 # Define dict with column ids in the kernel array for each multipole.
-pole_col_dict = {0: np.arange(16), 2: np.arange(17,28), 4: np.append(np.arange(28,33)[::-1], 16)[::-1],
+pole_col_dict = {0: np.arange(16), 2: np.arange(17,28), 4: np.append(np.arange(28,34), 16),
                  'extra': np.arange(34,37)}
 
 for k in pole_col_dict:
