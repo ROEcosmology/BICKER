@@ -56,8 +56,7 @@ def group_info(group, file_list=False):
     Returns:
         Information about the kernel group.
     '''
-    print(group)
-    print(type(group))
+
     if file_list:
         if type(group) is str:
             return shot_list

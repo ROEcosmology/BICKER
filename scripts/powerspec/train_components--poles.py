@@ -10,6 +10,8 @@ import glob
 parser = argparse.ArgumentParser()
 parser.add_argument("--inputX", help="Directory with feature files.", 
                     required=True)
+parser.add_argument("--cosmo_params", help="cosmological parameters included in the emulation.", nargs='+', type=str,
+                    required=True)
 parser.add_argument("--inputY", help="Directory with target function files.", 
                     required=True)
 parser.add_argument("--cache", help="Path to save outputs.", 
@@ -22,6 +24,7 @@ parser.add_argument("--verbose", help='Verbose for tensorflow.', default=0)
 args = parser.parse_args()
 
 inputX_path = args.inputX
+cosmo_params = args.cosmo_params
 inputY_path = args.inputY
 cache_path = args.cache
 new_split = bool(args.new_split)
@@ -75,7 +78,7 @@ print("Done.")
 print("Loading kernels...")
 kernels = []
 for i in range(10000):
-    kernels.append(np.loadtxt(f"{inputY_path}/pk_kernels_{i}.txt"))
+    kernels.append(np.loadtxt(f"{inputY_path}/kernels/pk_kernels_{i}.txt"))
 kernels = np.stack(kernels)
 print("Done.")
 
@@ -130,3 +133,4 @@ for k in pole_col_dict:
     # Save weights.
     model.save(cache_path+f"P{k}/components/member_0")
 
+np.save(cache_path+'cosmo_params.npy', cosmo_params)
