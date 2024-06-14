@@ -26,7 +26,7 @@ args = parser.parse_args()
 inputX_path = args.inputX
 cosmo_params = args.cosmo_params
 inputY_path = args.inputY
-cache_path = args.cache
+cache_path = args.cache+'/powerspec/'
 new_split = bool(args.new_split)
 arch = [int(i) for i in args.arch.split(" ")]
 
