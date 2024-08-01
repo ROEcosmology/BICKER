@@ -1,7 +1,20 @@
-.DS_Store
-.vscode
-__pycache__
+# Build/compilation
+__pycache__/
+*.py[cod]
+
+# Distributions
+eggs/
+.eggs/
+*.egg-info/
+*.egg
+
+# Tests
+.pytest_cache/
+
+# Misc
 .ipynb_checkpoints
+.DS_Store
+.vscode/
+
 data/*
 notebooks/archive/*
-bicker.egg-info

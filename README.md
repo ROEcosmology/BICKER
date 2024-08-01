@@ -4,18 +4,21 @@ BIspeCtrum KErnel emulator
 ## Installation
 
 ```
-https://github.com/ROEcosmology/BICKER.git
+git clone https://github.com/ROEcosmology/BICKER.git
 cd BICKER
-pip install -e ./
+pip install -e .
 ```
+
 ## Basic usage
 
 See the [`bicker_test.ipynb`](https://github.com/ROEcosmology/BICKER/blob/main/notebooks/bicker_test.ipynb) notebook.
 More documentation coming soon!
 
-We provide the script [`train_components--groups.py`](https://github.com/ROEcosmology/BICKER/blob/main/scripts/train_components--groups.py) that can be used to retrain the component emulators.
+We provide the script [`train_components--groups.py`](https://github.com/ROEcosmology/BICKER/blob/main/scripts/train_components--groups.py)
+that can be used to retrain the component emulators.
 
-```
+```bash session
+$ python train_components--groups.py -h
 usage: train_components--groups.py [-h] --inputX INPUTX --inputY INPUTY
                                    --cache CACHE [--new_split NEW_SPLIT]
                                    [--arch ARCH] [--verbose VERBOSE]
@@ -31,4 +34,4 @@ optional arguments:
                         string i.e. '200 200'. This specifies two hidden
                         layers with 200 nodes each.
   --verbose VERBOSE     Verbose for tensorflow.
-  ```
+```
