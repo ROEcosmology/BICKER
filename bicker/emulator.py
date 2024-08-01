@@ -32,11 +32,11 @@ class component_emulator:
         self.kbins = kbins
         '''The k-bins at which predictions will be made.'''
 
-        if group is not 'shot':
+        if group != 'shot':
             components_path = cache_path+"bispec/B{l}/".format(l=multipole)+"components/"
             scalers_path = cache_path+"bispec/B{l}/".format(l=multipole)+"scalers/"
             group_id = "group_{0}".format(group)
-        elif group is 'shot':
+        elif group == 'shot':
                 components_path = cache_path+"bispec/B{l}/shot/".format(l=multipole)+"components/"
                 scalers_path = cache_path+"bispec/B{l}/shot/".format(l=multipole)+"scalers/"
                 group_id = "group_0"
@@ -155,7 +155,7 @@ class bispectrum:
             shot_preds = np.stack(self.shot.emu_predict(cosmo))
             shot_preds = helper_funcs.combine_kernels([shot_preds],
                                                       b1=b1, b2=b2, bG2=bG2,
-                                                      c1=c1, c2=c2, 
+                                                      c1=c1, c2=c2,
                                                       groups=['shot'])
 
         if self.use_shot:
@@ -180,7 +180,7 @@ class power:
 
         self.models = []
         '''The NNs that the emulator is based. The first element is a NN that predicts kernels
-         specific to ``multipole``. The second predicts kernels that are relevant for all 
+         specific to ``multipole``. The second predicts kernels that are relevant for all
          multipoles.'''
 
         self.scalers = []
@@ -231,7 +231,7 @@ class power:
                     self.models[1](X_prime))
         preds_ext = preds_ext.reshape(cosmo.shape[0], int(preds_ext.shape[1]/self.kbins.shape[0]), self.kbins.shape[0])
 
-        return helper_funcs.powerspec_multipole((preds, preds_ext), 
+        return helper_funcs.powerspec_multipole((preds, preds_ext),
                                                 bias, self.multipole)
 
-        
+
