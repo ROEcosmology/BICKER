@@ -1,52 +1,144 @@
 import numpy as np
 
 # Combinations of bias parameters for bispec kernels.
-bispec_bias_lists = [["c2_b2_f", "c2_b1_b2", "c2_b1_b1",
-                      "c2_b1_f", "c2_b1_f", "c1_b1_b1_f",
-                      "c1_b2_f", "c1_b1_b2", "c1_b1_b1",
-                      "c2_b1_b1_f", "c1_b1_f"],
-                     ["c2_b1_f_f", "c1_f_f", "c1_f_f_f",
-                      "c2_f_f", "c2_f_f_f",
-                      "c1_b1_f_f"],
-                     ["c1_c1_f_f", "c2_c2_b1_f", "c2_c1_b1_f",
-                      "c2_c1_b1", "c2_c1_b2", "c2_c2_f_f",
-                      "c1_c1_f", "c2_c2_b1", "c2_c2_b2",
-                      "c2_c2_f", "c2_c1_b1_f", "c2_c1_f",
-                      "c1_c1_b1_f", "c1_c1_b1", "c1_c1_b2",
-                      "c1_c1_f_f"],
-                     ["c1_c1_bG2", "c2_c2_bG2", "c2_c1_bG2"],
-                     ["c1_b1_bG2", "c1_bG2_f", "c2_bG2_f",
-                      "c2_b1_bG2"],
-                     ["b1_f_f", "b1_b1_f_f", "b1_b1_b2",
-                      "b2_f_f", "b1_b1_b1", "b1_b1_b1_f",
-                      "b1_b1_f", "b1_f_f_f", "f_f_f",
-                      "f_f_f_f", "b1_b2_f"],
-                     ["bG2_f_f", "b1_b1_bG2", "b1_bG2_f"]]
+bispec_bias_lists = [
+    [
+        "c2_b2_f",
+        "c2_b1_b2",
+        "c2_b1_b1",
+        "c2_b1_f",
+        "c2_b1_f",
+        "c1_b1_b1_f",
+        "c1_b2_f",
+        "c1_b1_b2",
+        "c1_b1_b1",
+        "c2_b1_b1_f",
+        "c1_b1_f",
+    ],
+    ["c2_b1_f_f", "c1_f_f", "c1_f_f_f", "c2_f_f", "c2_f_f_f", "c1_b1_f_f"],
+    [
+        "c1_c1_f_f",
+        "c2_c2_b1_f",
+        "c2_c1_b1_f",
+        "c2_c1_b1",
+        "c2_c1_b2",
+        "c2_c2_f_f",
+        "c1_c1_f",
+        "c2_c2_b1",
+        "c2_c2_b2",
+        "c2_c2_f",
+        "c2_c1_b1_f",
+        "c2_c1_f",
+        "c1_c1_b1_f",
+        "c1_c1_b1",
+        "c1_c1_b2",
+        "c1_c1_f_f",
+    ],
+    ["c1_c1_bG2", "c2_c2_bG2", "c2_c1_bG2"],
+    ["c1_b1_bG2", "c1_bG2_f", "c2_bG2_f", "c2_b1_bG2"],
+    [
+        "b1_f_f",
+        "b1_b1_f_f",
+        "b1_b1_b2",
+        "b2_f_f",
+        "b1_b1_b1",
+        "b1_b1_b1_f",
+        "b1_b1_f",
+        "b1_f_f_f",
+        "f_f_f",
+        "f_f_f_f",
+        "b1_b2_f",
+    ],
+    ["bG2_f_f", "b1_b1_bG2", "b1_bG2_f"],
+]
 
-bispec_bias_sorted_kernels = ['b1_b1_b1', 'b1_b1_b2', 'b1_b1_bG2', 'b1_b1_f', 'b1_b1_b1_f', 'b1_b1_f_f',
-                     'b1_b2_f', 'b1_bG2_f', 'b1_f_f',
-                     'b1_f_f_f', 'b2_f_f', 'bG2_f_f', 'f_f_f', 'f_f_f_f',
-                     'c1_b1_b1', 'c1_b1_b2', 'c1_b1_bG2', 'c1_b1_f', 'c1_b1_b1_f', 'c1_b1_f_f', 'c1_b2_f',
-                     'c1_bG2_f', 'c1_f_f', 'c1_f_f_f', 'c1_c1_b1', 'c1_c1_b2', 'c1_c1_bG2', 'c1_c1_f',
-                     'c1_c1_b1_f', 'c1_c1_f_f', 'c2_b1_b1', 'c2_b1_b2', 'c2_b1_bG2', 'c2_b1_f', 'c2_b1_b1_f',
-                     'c2_b1_f_f', 'c2_b2_f', 'c2_bG2_f', 'c2_f_f', 'c2_f_f_f', 'c2_c1_b1', 'c2_c1_b2',
-                     'c2_c1_bG2', 'c2_c1_f', 'c2_c1_b1_f', 'c2_c1_f_f', 'c2_c2_b1', 'c2_c2_b2', 'c2_c2_bG2',
-                     'c2_c2_f', 'c2_c2_b1_f', 'c2_c2_f_f',
-                    'Bshot_b1_b1', 'Bshot_b1_f', 'Bshot_b1_c1', 'Bshot_b1_c2',
-                    'Pshot_f_b1', 'Pshot_f_f', 'Pshot_f_c1', 'Pshot_f_c2',
-                    'fnlloc_b1_b1_b1', 'fnlloc_b1_b1_f', 'fnlloc_b1_f_f', 'fnlloc_f_f_f',
-                    'fnlequi_b1_b1_b1', 'fnlequi_b1_b1_f', 'fnlequi_b1_f_f', 'fnlequi_f_f_f',
-                    'fnlortho_b1_b1_b1', 'fnlortho_b1_b1_f', 'fnlortho_b1_f_f', 'fnlortho_f_f_f',
-                    'fnlortho_LSS_b1_b1_b1', 'fnlortho_LSS_b1_b1_f', 'fnlortho_LSS_b1_f_f', 'fnlortho_LSS_f_f_f']
+bispec_bias_sorted_kernels = [
+    "b1_b1_b1",
+    "b1_b1_b2",
+    "b1_b1_bG2",
+    "b1_b1_f",
+    "b1_b1_b1_f",
+    "b1_b1_f_f",
+    "b1_b2_f",
+    "b1_bG2_f",
+    "b1_f_f",
+    "b1_f_f_f",
+    "b2_f_f",
+    "bG2_f_f",
+    "f_f_f",
+    "f_f_f_f",
+    "c1_b1_b1",
+    "c1_b1_b2",
+    "c1_b1_bG2",
+    "c1_b1_f",
+    "c1_b1_b1_f",
+    "c1_b1_f_f",
+    "c1_b2_f",
+    "c1_bG2_f",
+    "c1_f_f",
+    "c1_f_f_f",
+    "c1_c1_b1",
+    "c1_c1_b2",
+    "c1_c1_bG2",
+    "c1_c1_f",
+    "c1_c1_b1_f",
+    "c1_c1_f_f",
+    "c2_b1_b1",
+    "c2_b1_b2",
+    "c2_b1_bG2",
+    "c2_b1_f",
+    "c2_b1_b1_f",
+    "c2_b1_f_f",
+    "c2_b2_f",
+    "c2_bG2_f",
+    "c2_f_f",
+    "c2_f_f_f",
+    "c2_c1_b1",
+    "c2_c1_b2",
+    "c2_c1_bG2",
+    "c2_c1_f",
+    "c2_c1_b1_f",
+    "c2_c1_f_f",
+    "c2_c2_b1",
+    "c2_c2_b2",
+    "c2_c2_bG2",
+    "c2_c2_f",
+    "c2_c2_b1_f",
+    "c2_c2_f_f",
+    "Bshot_b1_b1",
+    "Bshot_b1_f",
+    "Bshot_b1_c1",
+    "Bshot_b1_c2",
+    "Pshot_f_b1",
+    "Pshot_f_f",
+    "Pshot_f_c1",
+    "Pshot_f_c2",
+    "fnlloc_b1_b1_b1",
+    "fnlloc_b1_b1_f",
+    "fnlloc_b1_f_f",
+    "fnlloc_f_f_f",
+    "fnlequi_b1_b1_b1",
+    "fnlequi_b1_b1_f",
+    "fnlequi_b1_f_f",
+    "fnlequi_f_f_f",
+    "fnlortho_b1_b1_b1",
+    "fnlortho_b1_b1_f",
+    "fnlortho_b1_f_f",
+    "fnlortho_f_f_f",
+    "fnlortho_LSS_b1_b1_b1",
+    "fnlortho_LSS_b1_b1_f",
+    "fnlortho_LSS_b1_f_f",
+    "fnlortho_LSS_f_f_f",
+]
 
 
 # The first 4 terms in this list are bispectrum kernels,
 # the last 4 are power spectrum kernels.
-shot_list = ["b1_b1", "b1_c1", "b1_c2", "b1_f",
-             "f_b1", "f_c1", "f_c2", "f_f"]
+shot_list = ["b1_b1", "b1_c1", "b1_c2", "b1_f", "f_b1", "f_c1", "f_c2", "f_f"]
+
 
 def group_info(group, file_list=False):
-    '''
+    """
     Args:
         group (int, str) : Group identifier. ``int`` in range 0-6,
          or ``shot``.
@@ -55,7 +147,7 @@ def group_info(group, file_list=False):
 
     Returns:
         Information about the kernel group.
-    '''
+    """
 
     if file_list:
         if type(group) is str:
@@ -68,9 +160,11 @@ def group_info(group, file_list=False):
         else:
             return len(bispec_bias_lists[group])
 
-def combine_kernels(kernel_groups, b1=None, b2=None, bG2=None, c1=None, c2=None,
-                    groups=None):
-    '''
+
+def combine_kernels(
+    kernel_groups, b1=None, b2=None, bG2=None, c1=None, c2=None, groups=None
+):
+    """
     Function for combing bias parameters and kernels.
 
     Args:
@@ -99,7 +193,7 @@ def combine_kernels(kernel_groups, b1=None, b2=None, bG2=None, c1=None, c2=None,
     Returns:
         Array containig the combined kernels and bias parameters.
         Each list item will have shape ``(n_samp, n_k)``.
-    '''
+    """
 
     # Determine the number of predictions being made.
     # This is a bit hacky.
@@ -107,7 +201,7 @@ def combine_kernels(kernel_groups, b1=None, b2=None, bG2=None, c1=None, c2=None,
     npred = kernel_groups[0].shape[1]
 
     # Store passed bias parameters in dict.
-    bias_dict = {"b1":b1, "b2":b2, "bG2":bG2, "c1":c1, "c2":c2}
+    bias_dict = {"b1": b1, "b2": b2, "bG2": bG2, "c1": c1, "c2": c2}
 
     # If passsed groups is None. Assume all.
     if groups is None:
@@ -124,17 +218,18 @@ def combine_kernels(kernel_groups, b1=None, b2=None, bG2=None, c1=None, c2=None,
 
         for component_id, components in enumerate(bias_list):
 
-            bi = np.ones((npred, ))
+            bi = np.ones((npred,))
             for bij in components:
                 if bij != 'f':
                     bi *= bias_dict[bij]
 
-            result += bi.reshape(-1,1)*kernel_groups[list_id][component_id]
+            result += bi.reshape(-1, 1) * kernel_groups[list_id][component_id]
 
     return result
 
+
 def mono_bias(bias):
-    '''
+    """
     Function for combining bias parameters for power spectrum monopole.
 
     Args:
@@ -142,29 +237,34 @@ def mono_bias(bias):
 
     Returns:
         Array of shape (n, 16). If all bias parameters were floats ``n=1``.
-    '''
+    """
 
     bias = np.atleast_2d(bias)
 
-    return np.vstack([np.repeat(1., bias.shape[0]),
-                      np.repeat(1., bias.shape[0]),
-                      bias[:,0],
-                      bias[:,0],
-                      bias[:,0]**2,
-                      bias[:,0]**2,
-                      0.25*bias[:,1]**2,
-                      bias[:,0]*bias[:,1],
-                      bias[:,1],
-                      bias[:,0]*bias[:,2],
-                      bias[:,2],
-                      bias[:,1]*bias[:,2],
-                      bias[:,2]**2,
-                      2*bias[:,5],
-                      (2*bias[:,2]+0.8*bias[:,3])*bias[:,0],
-                      2*bias[:,2]+0.8*bias[:,3]]).T
+    return np.vstack(
+        [
+            np.repeat(1.0, bias.shape[0]),
+            np.repeat(1.0, bias.shape[0]),
+            bias[:, 0],
+            bias[:, 0],
+            bias[:, 0] ** 2,
+            bias[:, 0] ** 2,
+            0.25 * bias[:, 1] ** 2,
+            bias[:, 0] * bias[:, 1],
+            bias[:, 1],
+            bias[:, 0] * bias[:, 2],
+            bias[:, 2],
+            bias[:, 1] * bias[:, 2],
+            bias[:, 2] ** 2,
+            2 * bias[:, 5],
+            (2 * bias[:, 2] + 0.8 * bias[:, 3]) * bias[:, 0],
+            2 * bias[:, 2] + 0.8 * bias[:, 3],
+        ]
+    ).T
+
 
 def quad_bias(bias):
-    '''
+    """
     Function for combining bias parameters for power spectrum quadrupole.
 
     Args:
@@ -172,24 +272,29 @@ def quad_bias(bias):
 
     Returns:
         Array of shape (n, 11). If all bias parameters were floats ``n=1``.
-    '''
+    """
 
     bias = np.atleast_2d(bias)
 
-    return np.vstack([np.repeat(1., bias.shape[0]),
-                      np.repeat(1., bias.shape[0]),
-                      bias[:,0],
-                      bias[:,0],
-                      bias[:,0]**2,
-                      bias[:,0]*bias[:,1],
-                      bias[:,1],
-                      bias[:,0]*bias[:,2],
-                      bias[:,2],
-                      2*bias[:,5],
-                      2*bias[:,2]+0.8*bias[:,3]]).T
+    return np.vstack(
+        [
+            np.repeat(1.0, bias.shape[0]),
+            np.repeat(1.0, bias.shape[0]),
+            bias[:, 0],
+            bias[:, 0],
+            bias[:, 0] ** 2,
+            bias[:, 0] * bias[:, 1],
+            bias[:, 1],
+            bias[:, 0] * bias[:, 2],
+            bias[:, 2],
+            2 * bias[:, 5],
+            2 * bias[:, 2] + 0.8 * bias[:, 3],
+        ]
+    ).T
+
 
 def hex_bias(bias):
-    '''
+    """
     Function for combining bias parameters for power spectrum quadrupole.
 
     Args:
@@ -197,20 +302,25 @@ def hex_bias(bias):
 
     Returns:
         Array of shape (n, 11). If all bias parameters were floats ``n=1``.
-    '''
+    """
 
     bias = np.atleast_2d(bias)
 
-    return np.vstack([np.repeat(1., bias.shape[0]),
-                      np.repeat(1., bias.shape[0]),
-                      bias[:,0],
-                      bias[:,0]**2,
-                      bias[:,1],
-                      bias[:,2],
-                      2*bias[:,5]]).T
+    return np.vstack(
+        [
+            np.repeat(1.0, bias.shape[0]),
+            np.repeat(1.0, bias.shape[0]),
+            bias[:, 0],
+            bias[:, 0] ** 2,
+            bias[:, 1],
+            bias[:, 2],
+            2 * bias[:, 5],
+        ]
+    ).T
+
 
 def extra_bias(bias, multipole):
-    '''
+    """
     Function for combining bias parameters for the terms that are common
     for all multipoles.
 
@@ -222,22 +332,31 @@ def extra_bias(bias, multipole):
 
     Returns:
         Array of shape (n, 3). If all bias parameters were floats ``n=1``.
-    '''
+    """
 
     bias = np.atleast_2d(bias)
 
-    constants_dict = {0: [7/8, 5/4, 35/72], 2: [55/22, 275/66, 175/99], 4: [1, 390/143, 210/143]}
+    constants_dict = {
+        0: [7 / 8, 5 / 4, 35 / 72],
+        2: [55 / 22, 275 / 66, 175 / 99],
+        4: [1, 390 / 143, 210 / 143],
+    }
     constants = constants_dict.get(multipole)
 
-    return np.vstack([bias[:,4]*constants[0]*bias[:,0]**2,
-                      bias[:,4]*constants[1]*bias[:,0],
-                      bias[:,4]*constants[2]]).T
+    return np.vstack(
+        [
+            bias[:, 4] * constants[0] * bias[:, 0] ** 2,
+            bias[:, 4] * constants[1] * bias[:, 0],
+            bias[:, 4] * constants[2],
+        ]
+    ).T
 
-comb_bias_fdict = {0: mono_bias, 2: quad_bias, 4: hex_bias,
-                   'extra': extra_bias}
+
+comb_bias_fdict = {0: mono_bias, 2: quad_bias, 4: hex_bias, "extra": extra_bias}
+
 
 def powerspec_multipole(P_n, bias, multipole):
-    '''
+    """
     Function for computing power spectrum multipoles via a
     combination of bias parameters and kernels.
 
@@ -252,8 +371,10 @@ def powerspec_multipole(P_n, bias, multipole):
 
     Returns:
         Array containing power spectrum multipole predictions.
-    '''
+    """
 
     combo_bs = comb_bias_fdict[multipole](bias)
-    combo_bs_ext = comb_bias_fdict['extra'](bias, multipole)
-    return np.einsum('nb,nbx->nx', combo_bs, P_n[0]) + np.einsum('nb,nbx->nx', combo_bs_ext, P_n[1])
+    combo_bs_ext = comb_bias_fdict["extra"](bias, multipole)
+    return np.einsum("nb,nbx->nx", combo_bs, P_n[0]) + np.einsum(
+        "nb,nbx->nx", combo_bs_ext, P_n[1]
+    )
